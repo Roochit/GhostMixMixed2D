@@ -161,5 +161,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d457c853c75c34f5c9e7dbd9b87fdae6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ghostLevel: 2
+  ghostLevel: 3
   nextLevelPrefab: {fileID: 0}
