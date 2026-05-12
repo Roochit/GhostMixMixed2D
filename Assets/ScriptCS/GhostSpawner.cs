@@ -1,36 +1,34 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class GhostSpawner : MonoBehaviour
 {
-    [Header("Ghost Prefabs")]
-    public GameObject ghostLV1;
-    public GameObject ghostLV2;
+    [Header("Ghost Prefabs (ใส่เรียงจาก LV1 - LV5)")]
+    public GameObject[] ghostPrefabs; // ลาก Prefab ผีมาใส่ในนี้ 5 ตัว
 
     [Header("UI Reference")]
-    public Image nextGhostUI; // ลาก Image UI มุมจอมาใส่ที่นี่
-    public Sprite spriteLV1;  // ลากรูปผีขาวมาใส่
-    public Sprite spriteLV2;  // ลากรูปผีแดงมาใส่
+    public Image nextGhostUI; 
 
     [Header("Settings")]
     public float spawnY = 4f;
     public float spawnRangeX = 2.5f;
     public float nextDelay = 0.5f;
 
-    private GameObject currentGhostInstance; // ตัวที่ค้างที่เมาส์
-    private int nextGhostLevel; // เก็บค่าว่าตัวต่อไปจะเป็น LV อะไร
+    private GameObject currentGhostInstance; 
+    private int nextGhostLevelIndex; // เก็บเป็น Index (0 คือ LV1, 4 คือ LV5)
     private bool canPlace = true;
 
     void Start()
     {
-        // เริ่มเกม: สุ่มตัวถัดไปก่อน แล้วค่อยสร้างตัวปัจจุบัน
-        nextGhostLevel = Random.Range(1, 3); 
+        // สุ่มตัวแรกที่จะโผล่ในมือ (Index 0 ถึง 4)
+        nextGhostLevelIndex = Random.Range(0, 5); 
         SpawnNextInHand();
     }
 
     void Update()
     {
-        // 1. ให้ตัวในมือเลื่อนตามเมาส์ (แต่ยังไม่ปล่อย)
+        // 1. เลื่อนตำแหน่ง Spawner ตามเมาส์
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         float clampedX = Mathf.Clamp(mousePos.x, -spawnRangeX, spawnRangeX);
         transform.position = new Vector3(clampedX, spawnY, 0);
@@ -40,7 +38,7 @@ public class GhostSpawner : MonoBehaviour
             currentGhostInstance.transform.position = transform.position;
         }
 
-        // 2. คลิกเพื่อปล่อย
+        // 2. คลิกปล่อย
         if (Input.GetMouseButtonDown(0) && canPlace && currentGhostInstance != null)
         {
             DropGhost();
@@ -49,34 +47,38 @@ public class GhostSpawner : MonoBehaviour
 
     void SpawnNextInHand()
     {
-        // สร้างผีในมือตามระดับที่สุ่มไว้ก่อนหน้า
-        GameObject prefabToSpawn = (nextGhostLevel == 1) ? ghostLV1 : ghostLV2;
+        // สร้างผีในมือจาก Index ที่สุ่มไว้
+        GameObject prefabToSpawn = ghostPrefabs[nextGhostLevelIndex];
         currentGhostInstance = Instantiate(prefabToSpawn, transform.position, Quaternion.identity);
         
-        // ปิดฟิสิกส์ชั่วคราวขณะอยู่ในมือ (ไม่ให้มันหล่นหรือชนใคร)
         Rigidbody2D rb = currentGhostInstance.GetComponent<Rigidbody2D>();
-        rb.simulated = false;
+        if(rb != null) rb.simulated = false;
 
-        // สุ่มตัว "ถัดไป" สำหรับคิวหน้า และอัปเดต UI
-        nextGhostLevel = Random.Range(1, 3);
+        // สุ่มตัว "ถัดไป" ใหม่ (0-4)
+        nextGhostLevelIndex = Random.Range(0, 5);
         UpdateNextUI();
     }
 
     void UpdateNextUI()
     {
-        // เปลี่ยนรูปที่มุมจอตามระดับที่สุ่มได้
-        nextGhostUI.sprite = (nextGhostLevel == 1) ? spriteLV1 : spriteLV2;
+        if (nextGhostUI != null && ghostPrefabs.Length > nextGhostLevelIndex)
+        {
+            // ดึง Sprite และสี จาก Prefab ตัวถัดไปมาแสดงบน UI โดยอัตโนมัติ
+            SpriteRenderer sr = ghostPrefabs[nextGhostLevelIndex].GetComponent<SpriteRenderer>();
+            if (sr != null)
+            {
+                nextGhostUI.sprite = sr.sprite;
+                nextGhostUI.color = sr.color; // ถ้าใช้บอลสีเดิมแต่เปลี่ยนสีใน Unity ตัวนี้จะช่วยให้ UI เปลี่ยนสีตาม
+            }
+        }
     }
 
     void DropGhost()
     {
-        // เปิดฟิสิกส์เพื่อให้มันร่วงลงหม้อ
         Rigidbody2D rb = currentGhostInstance.GetComponent<Rigidbody2D>();
-        rb.simulated = true;
+        if(rb != null) rb.simulated = true;
         
-        currentGhostInstance = null; // ปล่อยการควบคุม
-        
-        // รอดีเลย์แป๊บหนึ่งก่อนเอาตัวถัดไปขึ้นมาบนมือ
+        currentGhostInstance = null; 
         StartCoroutine(WaitAndSpawnNext());
     }
 
