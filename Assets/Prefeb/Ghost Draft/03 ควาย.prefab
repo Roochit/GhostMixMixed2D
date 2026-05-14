@@ -101,6 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ghostLevel: 3
   nextLevelPrefab: {fileID: 6145579627568397597, guid: 8ec04273e97a84f6b8fbf90aca301d2d, type: 3}
+  scoreValue: 20
 --- !u!58 &5953322367309446241
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -163,3 +163,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ghostLevel: 8
   nextLevelPrefab: {fileID: 8440758431620609922, guid: 791a5dd7ebb804a04b7ac19323aa7bc3, type: 3}
+  scoreValue: 150

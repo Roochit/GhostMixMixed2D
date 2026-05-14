@@ -6,6 +6,11 @@ public class GhostSpawner : MonoBehaviour
 {
     [Header("Ghost Prefabs (ใส่เรียงจาก LV1 - LV5)")]
     public GameObject[] ghostPrefabs; // ลาก Prefab ผีมาใส่ในนี้ 5 ตัว
+    
+    [Header("Line Settings")]
+    public LineRenderer aimLine; // ลาก AimLine มาใส่ในนี้
+    public float maxLineLength = 10f; // ความยาวสูงสุดถ้าไม่ชนอะไรเลย
+    public LayerMask groundLayer;    // เลือก Layer ที่เป็นก้นหม้อ (เพื่อไม่ให้เส้นทะลุ)
 
     [Header("UI Reference")]
     public Image nextGhostUI; 
@@ -13,80 +18,144 @@ public class GhostSpawner : MonoBehaviour
     [Header("Settings")]
     public float spawnY = 4f;
     public float spawnRangeX = 2.5f;
-    public float nextDelay = 0.5f;
+    public float lineLength = 10f;
+    // public float nextDelay = 0.5f;
 
     private GameObject currentGhostInstance; 
     private int nextGhostLevelIndex; // เก็บเป็น Index (0 คือ LV1, 4 คือ LV5)
-    private bool canPlace = true;
+    // private bool canPlace = true;
+    private bool isAiming = false;
 
     void Start()
     {
-        // สุ่มตัวแรกที่จะโผล่ในมือ (Index 0 ถึง 4)
-        nextGhostLevelIndex = Random.Range(0, 5); 
-        SpawnNextInHand();
+        nextGhostLevelIndex = Random.Range(0, 5);
+        PrepareGhost();
+        if (aimLine) aimLine.enabled = false; // ปิดเส้นเล็งตอนเริ่ม
     }
 
     void Update()
     {
-        // 1. เลื่อนตำแหน่ง Spawner ตามเมาส์
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        float clampedX = Mathf.Clamp(mousePos.x, -spawnRangeX, spawnRangeX);
+        // 1. ตรวจสอบการทัชหรือคลิก (Input สำหรับ Mobile/Simulator)
+        if (Input.GetMouseButtonDown(0)) 
+        {
+            isAiming = true;
+            if (aimLine) aimLine.enabled = true;
+        }
+
+        if (isAiming)
+        {
+            // เลื่อน Spawner และผีในมือตามนิ้ว/เมาส์
+            UpdateSpawnerPosition();
+            UpdateAimLine();
+        }
+
+        // 2. เมื่อปล่อยนิ้ว (Release) -> ให้ผีตกลงไป
+        if (Input.GetMouseButtonUp(0) && isAiming)
+        {
+            isAiming = false;
+            if (aimLine) aimLine.enabled = false;
+            DropGhost();
+        }
+    }
+    void UpdateSpawnerPosition()
+    {
+        Vector3 mousePos = Input.mousePosition;
+        // ใส่ระยะห่างจากกล้องถึงวัตถุลงไปด้วย (Camera.Z ห่างจาก Spawner.Z เท่าไหร่)
+        mousePos.z = -Camera.main.transform.position.z; 
+        
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(mousePos);
+        
+        float clampedX = Mathf.Clamp(worldPos.x, -spawnRangeX, spawnRangeX);
         transform.position = new Vector3(clampedX, spawnY, 0);
 
         if (currentGhostInstance != null)
         {
+            // ให้ตัวผี Lock ตำแหน่งเดียวกับ Spawner เป๊ะๆ
             currentGhostInstance.transform.position = transform.position;
-        }
-
-        // 2. คลิกปล่อย
-        if (Input.GetMouseButtonDown(0) && canPlace && currentGhostInstance != null)
-        {
-            DropGhost();
         }
     }
 
-    void SpawnNextInHand()
+    // void UpdateAimLine()
+    // {
+    //     if (aimLine != null)
+    //     {
+    //         // เมื่อ Use World Space = false:
+    //         // จุดที่ 0 คือ (0,0,0) หมายถึงเริ่มที่ตัวมันเอง (Spawner)
+    //         aimLine.SetPosition(0, Vector3.zero); 
+            
+    //         // จุดที่ 1 คือ (0, -ความยาว, 0) หมายถึงลากลงไปข้างล่างตรงๆ
+    //         aimLine.SetPosition(1, new Vector3(0, -lineLength, 0));
+    //     }
+    // }
+    // void UpdateAimLine()
+    // {
+    //     if (aimLine != null)
+    //     {
+    //         // กำหนดความหนาของเส้น (0.05f คือเลขที่คุณลองปรับดูว่าชอบไหม)
+    //         aimLine.startWidth = 0.05f; 
+    //         aimLine.endWidth = 0.05f;
+
+    //         aimLine.SetPosition(0, Vector3.zero); 
+    //         aimLine.SetPosition(1, new Vector3(0, -lineLength, 0));
+    //     }
+    // }
+
+    void UpdateAimLine()
     {
-        // สร้างผีในมือจาก Index ที่สุ่มไว้
+        if (aimLine != null)
+        {
+            // เริ่มต้นเส้นที่ตำแหน่ง Spawner (Local 0,0,0)
+            aimLine.SetPosition(0, Vector3.zero);
+
+            // ยิงลำแสง Raycast ลงไปข้างล่างเพื่อเช็คว่าชนก้นหม้อไหม
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, maxLineLength, groundLayer);
+
+            if (hit.collider != null)
+            {
+                // ถ้าชนก้นหม้อ ให้เส้นยาวไปหยุดแค่จุดที่ชน
+                // แปลงระยะทางจาก World เป็น Local เพื่อให้ใช้กับ Line ที่ไม่ใช้ World Space
+                float localHitY = hit.point.y - transform.position.y;
+                aimLine.SetPosition(1, new Vector3(0, localHitY, 0));
+            }
+            else
+            {
+                // ถ้าไม่ชนอะไรเลย ให้ยาวตามค่า maxLineLength ที่ตั้งไว้
+                aimLine.SetPosition(1, new Vector3(0, -maxLineLength, 0));
+            }
+        }
+    }
+
+    void PrepareGhost()
+    {
         GameObject prefabToSpawn = ghostPrefabs[nextGhostLevelIndex];
         currentGhostInstance = Instantiate(prefabToSpawn, transform.position, Quaternion.identity);
         
         Rigidbody2D rb = currentGhostInstance.GetComponent<Rigidbody2D>();
         if(rb != null) rb.simulated = false;
 
-        // สุ่มตัว "ถัดไป" ใหม่ (0-4)
         nextGhostLevelIndex = Random.Range(0, 5);
         UpdateNextUI();
     }
 
-    void UpdateNextUI()
+    void DropGhost()
     {
-        if (nextGhostUI != null && ghostPrefabs.Length > nextGhostLevelIndex)
+        if (currentGhostInstance != null)
         {
-            // ดึง Sprite และสี จาก Prefab ตัวถัดไปมาแสดงบน UI โดยอัตโนมัติ
-            SpriteRenderer sr = ghostPrefabs[nextGhostLevelIndex].GetComponent<SpriteRenderer>();
-            if (sr != null)
-            {
-                nextGhostUI.sprite = sr.sprite;
-                nextGhostUI.color = sr.color; // ถ้าใช้บอลสีเดิมแต่เปลี่ยนสีใน Unity ตัวนี้จะช่วยให้ UI เปลี่ยนสีตาม
-            }
+            Rigidbody2D rb = currentGhostInstance.GetComponent<Rigidbody2D>();
+            if(rb != null) rb.simulated = true;
+            
+            currentGhostInstance = null;
+            Invoke("PrepareGhost", 0.8f); // ดีเลย์นิดนึงก่อนตัวถัดไปจะโผล่มาบนมือ
         }
     }
 
-    void DropGhost()
+    void UpdateNextUI()
     {
-        Rigidbody2D rb = currentGhostInstance.GetComponent<Rigidbody2D>();
-        if(rb != null) rb.simulated = true;
-        
-        currentGhostInstance = null; 
-        StartCoroutine(WaitAndSpawnNext());
-    }
-
-    System.Collections.IEnumerator WaitAndSpawnNext()
-    {
-        canPlace = false;
-        yield return new WaitForSeconds(nextDelay);
-        SpawnNextInHand();
-        canPlace = true;
+        if (nextGhostUI != null)
+        {
+            SpriteRenderer sr = ghostPrefabs[nextGhostLevelIndex].GetComponent<SpriteRenderer>();
+            nextGhostUI.sprite = sr.sprite;
+            nextGhostUI.color = sr.color;
+        }
     }
 }
