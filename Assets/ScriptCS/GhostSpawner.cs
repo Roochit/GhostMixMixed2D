@@ -130,8 +130,14 @@ public class GhostSpawner : MonoBehaviour
         GameObject prefabToSpawn = ghostPrefabs[nextGhostLevelIndex];
         currentGhostInstance = Instantiate(prefabToSpawn, transform.position, Quaternion.identity);
         
+        // Rigidbody2D rb = currentGhostInstance.GetComponent<Rigidbody2D>();
+        // if(rb != null) rb.simulated = false;
+
         Rigidbody2D rb = currentGhostInstance.GetComponent<Rigidbody2D>();
-        if(rb != null) rb.simulated = false;
+        if(rb != null) 
+        {
+            rb.simulated = false; // ปิดการจำลองฟิสิกส์ (เส้นแดงจะไม่นับตัวนี้)
+        }
 
         nextGhostLevelIndex = Random.Range(0, 5);
         UpdateNextUI();
@@ -141,9 +147,13 @@ public class GhostSpawner : MonoBehaviour
     {
         if (currentGhostInstance != null)
         {
+            // Rigidbody2D rb = currentGhostInstance.GetComponent<Rigidbody2D>();
+            // if(rb != null) rb.simulated = true;
             Rigidbody2D rb = currentGhostInstance.GetComponent<Rigidbody2D>();
-            if(rb != null) rb.simulated = true;
-            
+            if(rb != null) 
+            {
+                rb.simulated = true; // เปิดการจำลองฟิสิกส์
+            }
             currentGhostInstance = null;
             Invoke("PrepareGhost", 0.8f); // ดีเลย์นิดนึงก่อนตัวถัดไปจะโผล่มาบนมือ
         }
