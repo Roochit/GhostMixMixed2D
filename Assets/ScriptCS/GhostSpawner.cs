@@ -28,6 +28,7 @@ public class GhostSpawner : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = 1f; 
         nextGhostLevelIndex = Random.Range(0, 5);
         PrepareGhost();
         if (aimLine) aimLine.enabled = false; // ปิดเส้นเล็งตอนเริ่ม

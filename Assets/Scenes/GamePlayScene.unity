@@ -970,6 +970,7 @@ MonoBehaviour:
   timeToFail: 10
   countdownText: {fileID: 270534813}
   gameOverPanel: {fileID: 1612611008}
+  loseScene: GamePlayScene
 --- !u!61 &324369648
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1002,7 +1003,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 1.9931126, y: 1.7923133}
+  m_Offset: {x: 2, y: 0.01}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1013,7 +1014,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 6.02378, y: 0.76968956}
+  m_Size: {x: 6, y: 0.1}
   m_EdgeRadius: 0
 --- !u!4 &324369649
 Transform:
@@ -1025,7 +1026,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.0207047, y: 2.3, z: 0.93511415}
-  m_LocalScale: {x: 1, y: 0.005, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -3086,7 +3087,7 @@ GameObject:
   - component: {fileID: 1612611010}
   - component: {fileID: 1612611009}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Lost Game
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3447,7 +3448,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2111755785}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 324369647}
+        m_TargetAssemblyTypeName: GameOverManagerCS, Assembly-CSharp
+        m_MethodName: RestartGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2111755785
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -15,6 +15,7 @@ public class GhostNode : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = 1f; 
         rb = GetComponent<Rigidbody2D>();
     }
 

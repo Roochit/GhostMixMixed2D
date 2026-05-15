@@ -10,6 +10,11 @@ public class ScoreManagerCS : MonoBehaviour
     public TextMeshProUGUI scoreText; // ลากตัวหนังสือ Score ใน UI มาใส่
     private int totalScore = 0;
 
+    public void Start()
+    {
+        Time.timeScale = 1f; 
+    }
+
     private void Awake()
     {
         if (instance == null) instance = this;

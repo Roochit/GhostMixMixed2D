@@ -10,21 +10,25 @@ public class GameOverManagerCS : MonoBehaviour
     public float timeToFail = 10f;
     public TextMeshProUGUI countdownText;
     public GameObject gameOverPanel;
+    public string loseScene;
 
     private float timer;
     private HashSet<GameObject> failingGhosts = new HashSet<GameObject>(); // เก็บผีที่ทำผิดกฎ
 
     void Awake()
     {
-        instance = this;
+        instance = this; // บังคับให้ instance ชี้มาที่ตัวใหม่ที่เพิ่งโหลดขึ้นมาเสมอ
     }
 
     void Start()
     {
+        Time.timeScale = 1f; 
         timer = timeToFail;
         if (countdownText) countdownText.gameObject.SetActive(false);
         if (gameOverPanel) gameOverPanel.SetActive(false);
     }
+
+
 
     // ผีจะส่งชื่อมาเข้าชื่อเมื่อล้นเส้น
     public void ReportGhostOverLine(GameObject ghost)
@@ -69,12 +73,13 @@ public class GameOverManagerCS : MonoBehaviour
     void GameOver()
     {
         if (gameOverPanel) gameOverPanel.SetActive(true);
-        Time.timeScale = 0;
+        Time.timeScale = 0f;
     }
 
     public void RestartGame()
     {
-        Time.timeScale = 1;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Time.timeScale = 1f;
+        if(failingGhosts != null) failingGhosts.Clear();
+        SceneManager.LoadScene(loseScene);
     }
 }
