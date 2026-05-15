@@ -1,30 +1,53 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GhostNode : MonoBehaviour
 {
-    public int ghostLevel; // ระดับของผี (เช่น LV1 คือบอลขาว, LV2 คือบอลแดง)
-    public GameObject nextLevelPrefab; // ลาก Prefab ตัวต่อไปมาใส่ใน Inspector
+    public int ghostLevel;
     public int scoreValue;
-    private bool isMerged = false; // ป้องกันการชนครั้งเดียวแล้วเกิดซ้ำสองรอบ
+    public GameObject nextLevelPrefab;
+    
+    private bool isMerged = false;
+    private bool hasLanded = false; // เช็คว่าชนกับผีตัวอื่นหรือพื้นหรือยัง
+    private Rigidbody2D rb;
 
-    // Start is called before the first frame update
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        // เงื่อนไข Game Over:
+        // 1. ต้องปล่อยลงมาแล้ว (simulated)
+        // 2. ต้องเคยชนกับอะไรบางอย่างด้านล่างแล้ว (hasLanded)
+        // 3. ตำแหน่ง Y สูงกว่าเส้นสีแดง
+        if (rb != null && rb.simulated && hasLanded)
+        {
+            float lineY = GameOverManagerCS.instance.transform.position.y;
+            if (transform.position.y > lineY)
+            {
+                GameOverManagerCS.instance.ReportGhostOverLine(gameObject);
+            }
+            else
+            {
+                GameOverManagerCS.instance.ReportGhostSafe(gameObject);
+            }
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        GhostNode otherGhost = collision.gameObject.GetComponent<GhostNode>();
+        // ถ้าชนกับ Ghost ตัวอื่น หรือ ชนพื้น/ขอบถัง ให้ถือว่า Landed แล้ว
+        if (collision.gameObject.CompareTag("Ghost") || collision.gameObject.name.Contains("Square"))
+        {
+            hasLanded = true;
+        }
 
+        // Logic การรวมร่างเดิม
+        GhostNode otherGhost = collision.gameObject.GetComponent<GhostNode>();
         if (otherGhost != null && !isMerged && !otherGhost.isMerged)
         {
             if (otherGhost.ghostLevel == this.ghostLevel)
@@ -33,17 +56,11 @@ public class GhostNode : MonoBehaviour
                 {
                     isMerged = true;
                     otherGhost.isMerged = true;
-
                     Vector3 spawnPos = (transform.position + collision.transform.position) / 2f;
-                    
-                    // สร้างตัวใหม่
                     GameObject nextGhost = Instantiate(nextLevelPrefab, spawnPos, Quaternion.identity);
                     
-                    // --- เพิ่มระบบคะแนนตรงนี้ ---
-                    // ดึงค่าคะแนนจากผีตัวใหม่ที่เพิ่งสร้างขึ้นมา
                     int points = nextGhost.GetComponent<GhostNode>().scoreValue;
-                    ScoreManagerCS.instance.AddScore(points);
-                    // -----------------------
+                    if(ScoreManagerCS.instance != null) ScoreManagerCS.instance.AddScore(points);
 
                     Destroy(gameObject);
                     Destroy(collision.gameObject);
@@ -51,5 +68,4 @@ public class GhostNode : MonoBehaviour
             }
         }
     }
-
 }

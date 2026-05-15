@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8954477033223690127}
   - component: {fileID: 3496514206412864552}
-  - component: {fileID: 6939586885848212328}
   - component: {fileID: 5953322367309446241}
   - component: {fileID: 4246083760142717176}
+  - component: {fileID: 6939586885848212328}
   m_Layer: 0
   m_Name: "03 \u0E04\u0E27\u0E32\u0E22"
   m_TagString: Ghost
@@ -87,21 +87,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6939586885848212328
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5817332183451490477}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d457c853c75c34f5c9e7dbd9b87fdae6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ghostLevel: 3
-  nextLevelPrefab: {fileID: 6145579627568397597, guid: 8ec04273e97a84f6b8fbf90aca301d2d, type: 3}
-  scoreValue: 20
 --- !u!58 &5953322367309446241
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -164,3 +149,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &6939586885848212328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5817332183451490477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d457c853c75c34f5c9e7dbd9b87fdae6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ghostLevel: 3
+  scoreValue: 20
+  nextLevelPrefab: {fileID: 6145579627568397597, guid: 8ec04273e97a84f6b8fbf90aca301d2d, type: 3}
