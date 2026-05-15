@@ -9,8 +9,13 @@ public class GameOverManagerCS : MonoBehaviour
 
     public float timeToFail = 10f;
     public TextMeshProUGUI countdownText;
+    [Header("Lose Settings")]
     public GameObject gameOverPanel;
     public string loseScene;
+
+    [Header("Win Settings")]
+    public GameObject winPanel;
+
 
     private float timer;
     private HashSet<GameObject> failingGhosts = new HashSet<GameObject>(); // เก็บผีที่ทำผิดกฎ
@@ -74,6 +79,16 @@ public class GameOverManagerCS : MonoBehaviour
     {
         if (gameOverPanel) gameOverPanel.SetActive(true);
         Time.timeScale = 0f;
+    }
+    public void WinGame()
+    {
+        // หยุดเกมและแสดงหน้าจอชนะ
+        if (winPanel) winPanel.SetActive(true);
+        
+        // อาจจะรอสัก 1-2 วินาทีให้คนดูผีตัวสุดท้ายก่อนค่อยหยุดเวลาก็ได้
+        Time.timeScale = 0f; 
+        Debug.Log("Congratulations! Game Clear.");
+        // Time.timeScale = 0f;
     }
 
     public void RestartGame()

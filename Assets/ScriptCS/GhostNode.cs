@@ -41,26 +41,32 @@ public class GhostNode : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // ถ้าชนกับ Ghost ตัวอื่น หรือ ชนพื้น/ขอบถัง ให้ถือว่า Landed แล้ว
-        if (collision.gameObject.CompareTag("Ghost") || collision.gameObject.name.Contains("Square"))
-        {
-            hasLanded = true;
-        }
-
-        // Logic การรวมร่างเดิม
         GhostNode otherGhost = collision.gameObject.GetComponent<GhostNode>();
+
         if (otherGhost != null && !isMerged && !otherGhost.isMerged)
         {
             if (otherGhost.ghostLevel == this.ghostLevel)
             {
+                // ถ้าตัวที่เรากำลังจะผสม มีตัวถัดไป (ยังไม่ใช่ตัวสุดท้าย)
                 if (nextLevelPrefab != null)
                 {
                     isMerged = true;
                     otherGhost.isMerged = true;
+
                     Vector3 spawnPos = (transform.position + collision.transform.position) / 2f;
                     GameObject nextGhost = Instantiate(nextLevelPrefab, spawnPos, Quaternion.identity);
                     
-                    int points = nextGhost.GetComponent<GhostNode>().scoreValue;
+                    // ตรวจสอบว่า "ตัวที่เพิ่งสร้าง" เป็นตัวสุดท้ายหรือไม่
+                    GhostNode nextNode = nextGhost.GetComponent<GhostNode>();
+                    if (nextNode.nextLevelPrefab == null)
+                    {
+                        // ถ้าตัวใหม่ไม่มีตัวไปต่อแล้ว = จบเกม (Win)
+                        Debug.Log("You reached the Final Ghost!");
+                        GameOverManagerCS.instance.WinGame(); 
+                    }
+
+                    // ระบบคะแนนเดิม
+                    int points = nextNode.scoreValue;
                     if(ScoreManagerCS.instance != null) ScoreManagerCS.instance.AddScore(points);
 
                     Destroy(gameObject);
