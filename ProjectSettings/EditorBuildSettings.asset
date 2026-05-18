@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GamePlayScene.unity
     guid: e4f74d36b99624674b125049a3e17561
+  - enabled: 1
+    path: Assets/Scenes/LotteryBonusScene.unity
+    guid: 2b238071bb1524445b0202bea8f9ad47
   m_configObjects: {}
