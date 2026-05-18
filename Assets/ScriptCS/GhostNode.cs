@@ -25,12 +25,25 @@ public class GhostNode : MonoBehaviour
         // 1. ต้องปล่อยลงมาแล้ว (simulated)
         // 2. ต้องเคยชนกับอะไรบางอย่างด้านล่างแล้ว (hasLanded)
         // 3. ตำแหน่ง Y สูงกว่าเส้นสีแดง
+        // if (rb != null && rb.simulated && hasLanded)
+        // {
+        //     float lineY = GameOverManagerCS.instance.transform.position.y;
+        //     if (transform.position.y > lineY)
+        //     {
+        //         GameOverManagerCS.instance.ReportGhostOverLine(gameObject);
+        //     }
+        //     else
+        //     {
+        //         GameOverManagerCS.instance.ReportGhostSafe(gameObject);
+        //     }
+        // }
+
         if (rb != null && rb.simulated && hasLanded)
         {
             float lineY = GameOverManagerCS.instance.transform.position.y;
             if (transform.position.y > lineY)
             {
-                GameOverManagerCS.instance.ReportGhostOverLine(gameObject);
+                GameOverManagerCS.instance.ReportGhostOverLine(gameObject); // บรรทัดนี้คือตัวจุดชนวนการนับถอยหลัง
             }
             else
             {
@@ -41,31 +54,35 @@ public class GhostNode : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        GhostNode otherGhost = collision.gameObject.GetComponent<GhostNode>();
+        // เช็คการชน: 
+        // 1. ชนกับผีตัวอื่น (Tag: Ghost)
+        // 2. ชนกับวัตถุที่มีชื่อว่า "Square" (ซึ่งก็คือ Square, Square (1), Square (2) ของคุณ)
+        if (collision.gameObject.CompareTag("Ghost") || 
+            collision.gameObject.name.Contains("Square"))
+        {
+            hasLanded = true;
+            // Debug.Log(gameObject.name + " แตะหม้อหรือแตะเพื่อนแล้ว -> พร้อมนับถอยหลัง");
+        }
 
+        // --- ส่วนการผสมผี (Merge) คงเดิม ---
+        GhostNode otherGhost = collision.gameObject.GetComponent<GhostNode>();
         if (otherGhost != null && !isMerged && !otherGhost.isMerged)
         {
             if (otherGhost.ghostLevel == this.ghostLevel)
             {
-                // ถ้าตัวที่เรากำลังจะผสม มีตัวถัดไป (ยังไม่ใช่ตัวสุดท้าย)
                 if (nextLevelPrefab != null)
                 {
                     isMerged = true;
                     otherGhost.isMerged = true;
-
                     Vector3 spawnPos = (transform.position + collision.transform.position) / 2f;
                     GameObject nextGhost = Instantiate(nextLevelPrefab, spawnPos, Quaternion.identity);
                     
-                    // ตรวจสอบว่า "ตัวที่เพิ่งสร้าง" เป็นตัวสุดท้ายหรือไม่
                     GhostNode nextNode = nextGhost.GetComponent<GhostNode>();
                     if (nextNode.nextLevelPrefab == null)
                     {
-                        // ถ้าตัวใหม่ไม่มีตัวไปต่อแล้ว = จบเกม (Win)
-                        Debug.Log("You reached the Final Ghost!");
                         GameOverManagerCS.instance.WinGame(); 
                     }
 
-                    // ระบบคะแนนเดิม
                     int points = nextNode.scoreValue;
                     if(ScoreManagerCS.instance != null) ScoreManagerCS.instance.AddScore(points);
 

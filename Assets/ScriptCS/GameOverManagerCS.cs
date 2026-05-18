@@ -36,8 +36,16 @@ public class GameOverManagerCS : MonoBehaviour
 
 
     // ผีจะส่งชื่อมาเข้าชื่อเมื่อล้นเส้น
+    // public void ReportGhostOverLine(GameObject ghost)
+    // {
+    //     if (!failingGhosts.Contains(ghost))
+    //     {
+    //         failingGhosts.Add(ghost);
+    //     }
+    // }
     public void ReportGhostOverLine(GameObject ghost)
     {
+        Debug.Log("Ghost is over line: " + ghost.name); // ถ้าบรรทัดนี้ไม่ขึ้นใน Console แสดงว่าเป็นที่ตัวผีไม่ยอมส่งรายงานมา
         if (!failingGhosts.Contains(ghost))
         {
             failingGhosts.Add(ghost);
