@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class GhostSpawner : MonoBehaviour
 {
@@ -26,6 +27,10 @@ public class GhostSpawner : MonoBehaviour
     // private bool canPlace = true;
     private bool isAiming = false;
 
+    [Header("Control Settings")]
+    private bool isSpawnerActive = true; // ตัวแปรควบคุมเปิด/ปิดระบบปล่อยผี
+    // private bool isAiming = false;
+
     void Start()
     {
         Time.timeScale = 1f; 
@@ -36,21 +41,27 @@ public class GhostSpawner : MonoBehaviour
 
     void Update()
     {
-        // 1. ตรวจสอบการทัชหรือคลิก (Input สำหรับ Mobile/Simulator)
+        if (!isSpawnerActive) return;
+
+        // 1. จังหวะกดนิ้วลง
         if (Input.GetMouseButtonDown(0)) 
         {
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            {
+                return; 
+            }
+
             isAiming = true;
             if (aimLine) aimLine.enabled = true;
         }
 
         if (isAiming)
         {
-            // เลื่อน Spawner และผีในมือตามนิ้ว/เมาส์
             UpdateSpawnerPosition();
             UpdateAimLine();
         }
 
-        // 2. เมื่อปล่อยนิ้ว (Release) -> ให้ผีตกลงไป
+        // 2. จังหวะปล่อยนิ้ว
         if (Input.GetMouseButtonUp(0) && isAiming)
         {
             isAiming = false;
@@ -58,6 +69,7 @@ public class GhostSpawner : MonoBehaviour
             DropGhost();
         }
     }
+    
     void UpdateSpawnerPosition()
     {
         Vector3 mousePos = Input.mousePosition;
@@ -73,6 +85,18 @@ public class GhostSpawner : MonoBehaviour
         {
             // ให้ตัวผี Lock ตำแหน่งเดียวกับ Spawner เป๊ะๆ
             currentGhostInstance.transform.position = transform.position;
+        }
+    }
+
+    public void SetSpawnerActive(bool active)
+    {
+        isSpawnerActive = active;
+        
+        // ถ้าถูกสั่งปิด ให้ล้างสถานะเล็งค้างทันที ป้องกันผีหลุดตอนยกนิ้ว
+        if (!active)
+        {
+            isAiming = false;
+            if (aimLine) aimLine.enabled = false;
         }
     }
 

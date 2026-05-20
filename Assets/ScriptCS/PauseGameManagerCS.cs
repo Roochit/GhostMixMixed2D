@@ -6,6 +6,7 @@ using UnityEngine;
 public class PauseGameManagerCS : MonoBehaviour
 {
     public GameObject PauseUI;
+    public GhostSpawner ghostSpawner;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,12 +20,21 @@ public class PauseGameManagerCS : MonoBehaviour
     }
     public void OnClickPause()
     {
+        if (ghostSpawner != null) 
+        {
+            ghostSpawner.SetSpawnerActive(false); 
+        }
         PauseUI.SetActive(true);
         Time.timeScale = 0f;
     }
 
     public void OnClickContinue()
     {
+        if (ghostSpawner != null) 
+        {
+            ghostSpawner.SetSpawnerActive(true); 
+        }
+
         PauseUI.SetActive(false);
         Time.timeScale = 1f;
     }
