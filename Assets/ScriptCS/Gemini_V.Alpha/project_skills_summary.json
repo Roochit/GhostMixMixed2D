@@ -1,0 +1,39 @@
+{
+    "project_name": "Sukati Project (เกมผสมผีไทย / Suika Game Style)",
+    "developer_name": "Roochit Khamcharoen",
+    "role": "Game Developer & Software Architect",
+    "core_technologies": [
+        "Unity Engine (2D Physics)",
+        "C# Scripting",
+        "TextMesh Pro (UI)",
+        "LineRenderer"
+    ],
+    "features_implemented": [
+        {
+            "feature": "Decoupled Game Over System",
+            "description": "ระบบตรวจจับการแพ้ผ่านพิกัดแกน Y ของวัตถุผี (GhostNode) แทนการใช้ Trigger แบบเดิม เพื่อป้องกันปัญหานาฬิกาเด้งสวนขณะร่วงผ่านเส้น"
+        },
+        {
+            "feature": "State-based Physics Activation",
+            "description": "ผีจะไม่ถูกนับว่าล้นเส้นจนกว่าจะเปลี่ยนสถานะ simulated เป็น true และมีปฏิสัมพันธ์ชนกับวัตถุก้นหม้อ/ผนังหม้อดิน (Square, Square 1, Square 2) หรือผีด้วยกันเองแล้วเท่านั้น (hasLanded)"
+        },
+        {
+            "feature": "Evolutionary Win Condition",
+            "description": "ระบบตรวจเช็คสายวิวัฒนาการผีไทย (LV1 - LV11) เมื่อผสมถึงตัวสุดท้าย (nextLevelPrefab == null) เกมจะสั่งจบและขึ้นหน้าจอชนะทันที"
+        },
+        {
+            "feature": "Slot Machine Lucky Number Generator",
+            "description": "ระบบสุ่มเลขท้าย 2 ตัวมงคล (สายมู) พร้อม Coroutine อนิเมชันตัวเลขวิ่งเร็วๆ เพื่อสร้างอรรถรสและของรางวัลให้ผู้ชนะ"
+        },
+        {
+            "feature": "Time Management Reset Fix",
+            "description": "แก้ไขบั๊กเกมค้าง (Freeze) หลังจากโหลด Scene ใหม่ โดยการควบคุมและคืนค่าพิกัดเวลาหลัก Time.timeScale = 1f ให้ถูกต้องในทุกจุดเชื่อมต่อ"
+        }
+    ],
+    "ai_assistant_capabilities": [
+        "Code Analysis & Refactoring",
+        "Bug Triaging & Architecture Design",
+        "Unity Hierarchy-to-Code Mapping",
+        "State Machine & Physics Synchronization"
+    ]
+}
