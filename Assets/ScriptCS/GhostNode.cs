@@ -8,9 +8,10 @@ public class GhostNode : MonoBehaviour
     public int ghostLevel;
     public int scoreValue;
     public GameObject nextLevelPrefab;
-    
+
+
     private bool isMerged = false;
-    private bool hasLanded = false; // เช็คว่าชนกับผีตัวอื่นหรือพื้นหรือยัง
+    private bool hasLanded = false; 
     private Rigidbody2D rb;
 
     void Start()
@@ -21,29 +22,13 @@ public class GhostNode : MonoBehaviour
 
     void Update()
     {
-        // เงื่อนไข Game Over:
-        // 1. ต้องปล่อยลงมาแล้ว (simulated)
-        // 2. ต้องเคยชนกับอะไรบางอย่างด้านล่างแล้ว (hasLanded)
-        // 3. ตำแหน่ง Y สูงกว่าเส้นสีแดง
-        // if (rb != null && rb.simulated && hasLanded)
-        // {
-        //     float lineY = GameOverManagerCS.instance.transform.position.y;
-        //     if (transform.position.y > lineY)
-        //     {
-        //         GameOverManagerCS.instance.ReportGhostOverLine(gameObject);
-        //     }
-        //     else
-        //     {
-        //         GameOverManagerCS.instance.ReportGhostSafe(gameObject);
-        //     }
-        // }
 
         if (rb != null && rb.simulated && hasLanded)
         {
             float lineY = GameOverManagerCS.instance.transform.position.y;
             if (transform.position.y > lineY)
             {
-                GameOverManagerCS.instance.ReportGhostOverLine(gameObject); // บรรทัดนี้คือตัวจุดชนวนการนับถอยหลัง
+                GameOverManagerCS.instance.ReportGhostOverLine(gameObject); 
             }
             else
             {
@@ -54,9 +39,6 @@ public class GhostNode : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // เช็คการชน: 
-        // 1. ชนกับผีตัวอื่น (Tag: Ghost)
-        // 2. ชนกับวัตถุที่มีชื่อว่า "Square" (ซึ่งก็คือ Square, Square (1), Square (2) ของคุณ)
         if (collision.gameObject.CompareTag("Ghost") || 
             collision.gameObject.name.Contains("Square"))
         {
@@ -84,7 +66,16 @@ public class GhostNode : MonoBehaviour
                     }
 
                     int points = nextNode.scoreValue;
-                    if(ScoreManagerCS.instance != null) ScoreManagerCS.instance.AddScore(points);
+                    if(ScoreManagerCS.instance != null) 
+                    {
+                        ScoreManagerCS.instance.AddScore(points);
+                    }
+
+                    if (AudioManagerCS.instance != null)
+                    {
+                        AudioManagerCS.instance.PlayFusionSound();
+                    }
+
 
                     Destroy(gameObject);
                     Destroy(collision.gameObject);

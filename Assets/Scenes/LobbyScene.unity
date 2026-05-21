@@ -448,7 +448,7 @@ GameObject:
   - component: {fileID: 1698985431}
   - component: {fileID: 1698985430}
   m_Layer: 0
-  m_Name: "\u0E40\u0E1E\u0E25\u0E07\u0E25\u0E4A\u0E2D\u0E1A\u0E1A\u0E35\u0E49-mp3"
+  m_Name: BGM_Loppy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -464,7 +464,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: bb9a80fbe19f74c4a898bd15e6ba0613, type: 3}
+  m_audioClip: {fileID: 8300000, guid: e0929823012b64bdc9cf2a7f1818e38d, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1

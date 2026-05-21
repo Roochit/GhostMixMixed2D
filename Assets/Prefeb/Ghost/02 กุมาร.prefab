@@ -164,3 +164,4 @@ MonoBehaviour:
   ghostLevel: 2
   scoreValue: 10
   nextLevelPrefab: {fileID: 5817332183451490477, guid: c7a60d150ec8545559897984fdd6cad3, type: 3}
+  fusionAudio: {fileID: 2242675214803871004, guid: 0ec5d0373707547128cf8d3b1be99e35, type: 3}

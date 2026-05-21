@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 307daaa88ecae4820b864a4b82d1b404, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fd3c3bdc3bb2d4a89bb6908197838a84, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -162,5 +162,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ghostLevel: 5
-  nextLevelPrefab: {fileID: 150845359177424944, guid: 4efb67bfec6d048b1a20d5cd9afb9e49, type: 3}
   scoreValue: 50
+  nextLevelPrefab: {fileID: 150845359177424944, guid: 4efb67bfec6d048b1a20d5cd9afb9e49, type: 3}
+  fusionAudio: {fileID: 2242675214803871004, guid: 0ec5d0373707547128cf8d3b1be99e35, type: 3}
