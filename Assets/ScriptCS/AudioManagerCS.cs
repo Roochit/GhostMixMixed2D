@@ -24,7 +24,7 @@ public class AudioManagerCS : MonoBehaviour
 
     void Start()
     {
-        
+        audioSource.Stop();
     }
 
     
