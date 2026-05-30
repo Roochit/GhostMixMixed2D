@@ -33,13 +33,13 @@ public class NextSceneBottonManagerCS : MonoBehaviour
 
         PlayNextSceneSound();
         
-        transform.localScale = new Vector3(6.0f, 6.0f, 6.0f);
+        transform.localScale = new Vector3(6.0f, 10.0f, 0.0f);
         
         
         yield return new WaitForSeconds(delayTime / 2);
         
         
-        transform.localScale = new Vector3(4.0f, 4.0f, 4.0f);
+        transform.localScale = new Vector3(4.0f, 8.0f, 0.0f);
         
         yield return new WaitForSeconds(delayTime / 2);
 
