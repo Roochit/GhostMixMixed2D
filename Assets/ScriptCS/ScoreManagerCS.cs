@@ -28,6 +28,6 @@ public class ScoreManagerCS : MonoBehaviour
 
     void UpdateScoreUI()
     {
-        scoreText.text = "Score : " + totalScore.ToString();
+        scoreText.text = "คะแนน : " + totalScore.ToString();
     }
 }
