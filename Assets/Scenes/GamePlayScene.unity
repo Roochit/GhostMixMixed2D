@@ -1266,6 +1266,7 @@ MonoBehaviour:
   gameOverPanel: {fileID: 1612611008}
   loseScene: GamePlayScene
   winPanel: {fileID: 1269257749}
+  gameplayBGM: {fileID: 1614183356}
 --- !u!61 &324369648
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6282,6 +6283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PauseUI: {fileID: 630750281}
+  gameplayBGM: {fileID: 1614183356}
   ghostSpawner: {fileID: 151322251}
 --- !u!4 &1786686828
 Transform:

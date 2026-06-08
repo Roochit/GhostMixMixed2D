@@ -16,9 +16,12 @@ public class GameOverManagerCS : MonoBehaviour
     [Header("Win Settings")]
     public GameObject winPanel;
 
+    [Header("Audio Settings")]
+    public AudioSource gameplayBGM;
+
 
     private float timer;
-    private HashSet<GameObject> failingGhosts = new HashSet<GameObject>(); // เก็บผีที่ทำผิดกฎ
+    private HashSet<GameObject> failingGhosts = new HashSet<GameObject>(); 
 
     void Awake()
     {
@@ -85,6 +88,8 @@ public class GameOverManagerCS : MonoBehaviour
 
     void GameOver()
     {
+        if (gameplayBGM != null) gameplayBGM.Stop();
+
         if (gameOverPanel) gameOverPanel.SetActive(true);
         Time.timeScale = 0f;
     }
@@ -92,6 +97,7 @@ public class GameOverManagerCS : MonoBehaviour
     {
         // หยุดเกมและแสดงหน้าจอชนะ
         if (winPanel) winPanel.SetActive(true);
+        if (gameplayBGM != null) gameplayBGM.Stop();
         
         // อาจจะรอสัก 1-2 วินาทีให้คนดูผีตัวสุดท้ายก่อนค่อยหยุดเวลาก็ได้
         Time.timeScale = 0f; 
@@ -102,7 +108,11 @@ public class GameOverManagerCS : MonoBehaviour
     public void RestartGame()
     {
         Time.timeScale = 1f;
+
         if(failingGhosts != null) failingGhosts.Clear();
+
+        if (gameplayBGM != null) gameplayBGM.Play();
+        
         SceneManager.LoadScene(loseScene);
     }
 }
