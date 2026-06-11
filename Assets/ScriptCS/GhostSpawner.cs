@@ -137,6 +137,9 @@ public class GhostSpawner : MonoBehaviour
         {
             aimLine.SetPosition(0, Vector3.zero);
 
+            aimLine.startWidth = 0.15f;
+            aimLine.endWidth = 0.05f;
+
             RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, maxLineLength, groundLayer);
 
             if (hit.collider != null)
