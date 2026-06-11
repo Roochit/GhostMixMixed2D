@@ -127,24 +127,26 @@ public class GhostSpawner : MonoBehaviour
 
     void UpdateAimLine()
     {
-        if (aimLine != null)
+        if (aimLine == null) 
         {
-            // เริ่มต้นเส้นที่ตำแหน่ง Spawner (Local 0,0,0)
+            return;
+        }
+
+
+        if (aimLine != null) 
+        {
             aimLine.SetPosition(0, Vector3.zero);
 
-            // ยิงลำแสง Raycast ลงไปข้างล่างเพื่อเช็คว่าชนก้นหม้อไหม
             RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, maxLineLength, groundLayer);
 
             if (hit.collider != null)
             {
-                // ถ้าชนก้นหม้อ ให้เส้นยาวไปหยุดแค่จุดที่ชน
-                // แปลงระยะทางจาก World เป็น Local เพื่อให้ใช้กับ Line ที่ไม่ใช้ World Space
                 float localHitY = hit.point.y - transform.position.y;
+                
                 aimLine.SetPosition(1, new Vector3(0, localHitY, 0));
             }
             else
             {
-                // ถ้าไม่ชนอะไรเลย ให้ยาวตามค่า maxLineLength ที่ตั้งไว้
                 aimLine.SetPosition(1, new Vector3(0, -maxLineLength, 0));
             }
         }
