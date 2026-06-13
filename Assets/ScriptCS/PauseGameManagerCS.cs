@@ -8,6 +8,10 @@ public class PauseGameManagerCS : MonoBehaviour
     public GameObject PauseUI;
     public AudioSource gameplayBGM;
     public GhostSpawner ghostSpawner;
+
+    // public AudioSource lobbyBGM; 
+    // public GameObject settingsPanel;
+    
     // Start is called before the first frame update
     void Start()
     {

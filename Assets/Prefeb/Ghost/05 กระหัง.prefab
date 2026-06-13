@@ -96,7 +96,7 @@ CircleCollider2D:
   m_GameObject: {fileID: 6331693204573695055}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 90bfec65bbad94f51aec303cae081863, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -164,4 +164,3 @@ MonoBehaviour:
   ghostLevel: 5
   scoreValue: 50
   nextLevelPrefab: {fileID: 150845359177424944, guid: 4efb67bfec6d048b1a20d5cd9afb9e49, type: 3}
-  fusionAudio: {fileID: 2242675214803871004, guid: 0ec5d0373707547128cf8d3b1be99e35, type: 3}

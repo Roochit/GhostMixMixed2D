@@ -96,7 +96,7 @@ CircleCollider2D:
   m_GameObject: {fileID: 3642956212453817809}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 8c0d98e684ff5462287ae9dbe1420552, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
