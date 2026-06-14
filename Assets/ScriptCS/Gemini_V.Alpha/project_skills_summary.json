@@ -1,39 +1,39 @@
 {
-    "project_name": "Sukati Project (เกมผสมผีไทย / Suika Game Style)",
-    "developer_name": "Roochit Khamcharoen",
-    "role": "Game Developer & Software Architect",
-    "core_technologies": [
-        "Unity Engine (2D Physics)",
-        "C# Scripting",
-        "TextMesh Pro (UI)",
-        "LineRenderer"
-    ],
-    "features_implemented": [
+  "project_name": "GhostMixMixed2D",
+  "engine_version": "Unity 2022.3.62f1 (Metal/PC)",
+  "aspect_ratio": "1536x2048 (iPad 3:4 Portrait Scale)",
+  "last_updated": "2026-06-14",
+  "implemented_subsystems": 
+    {
+        "aiming_and_physics_system": 
         {
-            "feature": "Decoupled Game Over System",
-            "description": "ระบบตรวจจับการแพ้ผ่านพิกัดแกน Y ของวัตถุผี (GhostNode) แทนการใช้ Trigger แบบเดิม เพื่อป้องกันปัญหานาฬิกาเด้งสวนขณะร่วงผ่านเส้น"
+        "component": "LineRenderer & Physics2D",
+        "features": [
+            "Dynamic Raycast Clipping: ยิงเลเซอร์ฟิสิกส์ดิ่งลงแนวแกน Y (`Vector2.down`) ตรวจจับพื้นหม้อและหัวผีตัวอื่น เพื่อตัดความยาวเส้นเล็งแบบ Real-time",
+            "Space Conversion Logic: แปลงพิกัดจุดกระทบจาก World Space กลับมาเป็น Local Space ด้วยสมการ `hit.point.y - transform.position.y` เพื่อวาดเส้นเล็งแบบปิด Use World Space",
+            "Bounciness Layer Matrices: ออกแบบพฤติกรรมการเด้งดึ๋งของวัตถุโดยใช้ `Physics Material 2D` ควบคุมแรงสะท้อนกลับ (Bounciness) ระหว่าง `0.3 - 0.5` แยกตามเลเวลของตัวผี"
+        ]
         },
-        {
-            "feature": "State-based Physics Activation",
-            "description": "ผีจะไม่ถูกนับว่าล้นเส้นจนกว่าจะเปลี่ยนสถานะ simulated เป็น true และมีปฏิสัมพันธ์ชนกับวัตถุก้นหม้อ/ผนังหม้อดิน (Square, Square 1, Square 2) หรือผีด้วยกันเองแล้วเท่านั้น (hasLanded)"
+        "audio_architecture": {
+        "component": "Audio Mixer & AudioSource",
+        "features": [
+            "Exposed Parameters Routing: ทำการ Expose ค่า Volume จากกลุ่ม Master/BGM/SFX ใน Audio Mixer มาผูกกับระบบโค้ดผ่าน Parameter คีย์ `MasterVol`",
+            "Logarithmic Volume Scaling: แก้ไขเสียงแตกและวอลลุ่มดับไวด้วยการแปลงค่าสไลเดอร์ (0 ถึง 1) ไปเป็นเดซิเบล (-80 ถึง 20 dB) ด้วยสูตร `Mathf.Log10(value) * 20f`",
+            "Contextual Audio Controlling: วาง Logic แยกแยะปุ่ม Pause หน้าเล่นเกม (ใช้ `Time.timeScale` ควบคู่ `AudioSource.Pause() / UnPause()`) ออกจากหน้า Lobby เมนูหลักอย่างเด็ดขาดเพื่อป้องกันเพลงค้าง"
+        ]
         },
-        {
-            "feature": "Evolutionary Win Condition",
-            "description": "ระบบตรวจเช็คสายวิวัฒนาการผีไทย (LV1 - LV11) เมื่อผสมถึงตัวสุดท้าย (nextLevelPrefab == null) เกมจะสั่งจบและขึ้นหน้าจอชนะทันที"
+        "data_persistence_and_ui": {
+        "component": "PlayerPrefs & TextMeshPro",
+        "features": [
+            "Volume State Syncing: ใช้ระบบ `PlayerPrefs` เก็บคู่คีย์ `SavedVolume_MasterVol` เพื่อดึงระดับเสียงล่าสุดที่ผู้เล่นตั้งไว้กลับมาซิงค์กับตำแหน่งก้าน Slider UI ทุกครั้งที่เปิดหรือรีสตาร์ตซีนใหม่",
+            "Frozen UI Randomization: ออกแบบโมดูลการสุ่มสไปรท์ภาพสัตว์/ผี และข้อความผ่านฟังก์ชัน `ForceRandom()` แยกเป็นแบบ Explicit Call เพื่อแก้ปัญหาระบบล็อกคำเดิมตอนที่เกมสั่งหยุดเวลา (`Time.timeScale = 0f`)"
+        ]
         },
-        {
-            "feature": "Slot Machine Lucky Number Generator",
-            "description": "ระบบสุ่มเลขท้าย 2 ตัวมงคล (สายมู) พร้อม Coroutine อนิเมชันตัวเลขวิ่งเร็วๆ เพื่อสร้างอรรถรสและของรางวัลให้ผู้ชนะ"
-        },
-        {
-            "feature": "Time Management Reset Fix",
-            "description": "แก้ไขบั๊กเกมค้าง (Freeze) หลังจากโหลด Scene ใหม่ โดยการควบคุมและคืนค่าพิกัดเวลาหลัก Time.timeScale = 1f ให้ถูกต้องในทุกจุดเชื่อมต่อ"
+        "screen_resolution_management": {
+        "component": "Player Settings & Screen API",
+        "features": [
+            "Cross-Platform Safe Scale: บังคับหน้าต่างเริ่มต้นขนาด 600x800 พิกเซล (`FullScreenMode.Windowed`) เพื่อป้องกันปัญหากรอบจอเกมแนวตั้งทะลุขอบล่างของ Notebook (Windows/Mac) พร้อมเปิดสิทธิ์ลากปรับขนาดได้อิสระโดยคงสัดส่วนเดิม"
+        ]
         }
-    ],
-    "ai_assistant_capabilities": [
-        "Code Analysis & Refactoring",
-        "Bug Triaging & Architecture Design",
-        "Unity Hierarchy-to-Code Mapping",
-        "State Machine & Physics Synchronization"
-    ]
+    }
 }
