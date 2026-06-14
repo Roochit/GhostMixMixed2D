@@ -6,9 +6,13 @@ public class ScreenManagerCS : MonoBehaviour
 {
     void Awake() 
     {
-        int WidthScale = 600 ;
-        int HeightScale = 800 ;
+        #if UNITY_STANDALONE
+            int WidthScale = 600 ;
+            int HeightScale = 800 ;
 
-        Screen.SetResolution(WidthScale, HeightScale , FullScreenMode.Windowed);
+            Screen.SetResolution(WidthScale, HeightScale , FullScreenMode.Windowed);
+
+            Screen.fullScreen = false;
+        #endif
     }
 }
